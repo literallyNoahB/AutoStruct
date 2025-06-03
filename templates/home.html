@@ -1,0 +1,139 @@
+<!--Nav bar component-->
+{% extends "layout.html" %}
+
+<!--SET TITLE-->
+{% block title %}Home Page{% endblock %}
+
+<!--CUSTOM CONTENT-->
+{% block content %}
+    <!--INTRO SECTION-->
+    <h1 class='pb-3'>Welcome to AutoStruct</h1>
+    <p class='pb-1'>AutoStruct is an easy-to-use web application for dehydrated protein film secondary structure analysis.</p>
+    <p class='pb-2'>For a tutorial on file formatting and interpretation, please click <em><u><a href="/tutorial">tutorial.</a></u></em> Please note that on average files will take 5-20 seconds to process. Additionally, AutoStruct will delete all user submitted files at around 00:00 EST everyday to manage file storage.</p>
+    <hr>
+
+    <!-- CREATE DROPDOWN BUTTON FOR FORM -->
+    <button class="btn btn-light mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseContent" aria-expanded="false" aria-controls="CollapseContent">
+        Change AutoStruct Parameters
+    </button>
+
+    <!--FORM SECTION-->
+    <form action="/home" method="POST" enctype="multipart/form-data">
+        <div class="collapse" id="CollapseContent">
+            <p class='pb-1 text-start text-secondary'>*AutoStruct's parameters will reset after each upload</p>
+            <!-- NEW INFORMATION FOR PARAMETERS -->
+            <div class="form-group py-2">
+                <div class="row align-items-center">
+                    <label class="col-auto" for="param1">Inherent lineshape standard deviation: </label>
+                    <input class="col-auto" type="number" class="form-control" id="param1" name="param1" value="13">
+                </div>
+            </div>
+            <div class="form-group py-2">
+                <div class="row align-items-center">
+                    <label class="col-auto" for="param2">Initial standard deviation guess: </label>
+                    <input class="col-auto" type="number" class="form-control" id="param2" name="param2" value="6">
+                </div>
+            </div>
+            <div class="form-group py-2">
+                <div class="row align-items-center">
+                    <label class="col-auto" for="param3">Apodization Constant: </label>
+                    <input class="col-auto" type="number" class="form-control" id="param3" name="param3" value="0.048" step=".001">
+                </div>
+            </div>
+            <div class="form-group py-2">
+                <div class="row align-items-center">
+                    <label class="col-auto" for="param4">Savitzky-Golay smoothing points: </label>
+                    <input class="col-auto" type="number" class="form-control" id="param4" name="param4" value="7">
+                </div>
+            </div>
+            <div class="form-group py-2">
+                <div class="row align-items-center">
+                    <label class="col-auto" for="param5">Savitzky-Golay second derivative points: </label>
+                    <input class="col-auto" type="number" class="form-control" id="param5" name="param5" value="7">
+                </div>
+            </div>
+            <div class="form-group py-2">
+                <div class="row align-items-center">
+                    <label class="col-auto" for="param8">Lower boundary (cm-1): </label>
+                    <input class="col-auto" type="number" class="form-control" id="param8" name="param8" value="1710">
+                </div>
+            </div>
+            <div class="form-group py-2">
+                <div class="row align-items-center">
+                    <label class="col-auto" for="param9">Upper boundary (cm-1): </label>
+                    <input class="col-auto" type="number" class="form-control" id="param9" name="param9" value="1599">
+                </div>
+            </div>
+            <div class="form-group py-2">
+                <div class="row align-items-center">
+                    <label class="col-auto" for="param6">Member plot title: </label>
+                    <input class="col-md" type="text" class="form-control" id="param6" name="param6" value="">
+                </div>
+            </div>
+            <div class="form-group py-2">
+                <div class="row align-items-center">
+                    <label class="col-auto" for="param7">Spectrum plot title: </label>
+                    <input class="col-md" type="text" class="form-control" id="param7" name="param7" value="">
+                </div>
+            </div>
+        </div>
+
+        <!-- OLD INFORMATION (added div tag) -->
+        <div class="pt-3">
+            <label for="file">File:</label>
+            <input class='btn' type="file" id="file" name="file">
+            <button class='btn btn-primary'>Upload</button>
+        </div>
+    </form>
+
+    <!--IF FILE NOT SAVED/PROCESSED CORRECTLY-->
+    {% if file_not_loaded %}
+        <p class="mt-5">File was saved but not processed correctly.</p>
+        <p>Please ensure file formatting is correct, general protein behavior is being followed, the Amide I region is included, and machine resolution is great enough.</p>
+    {% endif %}
+
+    {% if file_not_saved %}
+        <p class="mt-5">File has not been saved properly.</p>
+        <p>Please ensure your file is smaller than 10 mb and is also formatted as a .csv file-type.</p>
+    {% endif %}
+
+    {% if processed %}
+        <div class="row mt-5">
+            <div class="mb-4">
+                <h4>Download All Related Data Files</h4>
+                <a href="{{ url_for('download_zip', foldername=data_files_name) }}" class="btn btn-primary">Download All Data Files</a>
+            </div>
+            <h4 class='mb-1'>Secondary Structure Quantification:</h4>
+            <div class="col-md mt-4">
+                <p><strong>Full Secondary Structure Content:</strong></p>
+                {% for i in range(structure_names|length) %}
+                    <p>{{ structure_names[i] }} - {{ structure_contents[i] }}</p> 
+                {% endfor %}
+            </div>
+            <div class="col-md mt-4">
+                <p><strong>Condensed Secondary Structure Content:</strong></p>
+                {% for i in range(cond_structure_names|length) %}
+                    <p>{{ cond_structure_names[i] }} - {{ cond_structure_contents[i] }}</p> 
+                {% endfor %}
+            </div>
+            <div class='m-5'>
+                <h4 class='mb-1'>Gaussian Member Plot:</h4>
+                <img src="{{ url_for('user_images', filename=processed_graph) }}" alt="Graph" class="img-fluid" id="user-graph">
+                <br>
+                <div class='mt-1'>
+                    <a href="{{ url_for('user_images', filename=processed_graph, download='true') }}" class="btn btn-primary">Download Member Plot</a>
+                </div>
+            </div>
+            <div class='m-5'>
+                <h4 class='mb-1'>Whole Spectrum Plot:</h4>
+                <img src="{{ url_for('user_images', filename=whole_graph) }}" alt="Graph" class="img-fluid" id="user-graph">
+                <br>
+                <div class='mt-1'>
+                    <a href="{{ url_for('user_images', filename=whole_graph, download='true') }}" class="btn btn-primary">Download Whole Spectrum Plot</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+

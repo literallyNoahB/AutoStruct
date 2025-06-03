@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+<!--SET TITLE-->
+{% block title %}Tutorial Page{% endblock %}
+
+<!--CONTENT-->
+{% block content %}
+    <div>
+        <h1 class="pb-4">Tutorial</h1>
+
+        <h4 class="pb-2">What Type of Samples to Submit</h3>
+        <p class="pb-3">AutoStruct is an online-web server designed for the analysis of protein secondary structure analysis using Fourier Transform Infrared Spectroscopy (FTIR). AutoStruct should only be used for dehydrated samples, which excludes dissolved protein samples in H2O, D2O, or other solvents. We recommend samples be collected through ATR-FTIR, however, AutoStruct should be applicable through other methods of FTIR collection.</p>
+
+        <h4 class="pb-2">How to Prepare Files and Preprocessing</h3>
+        <p>AutoStruct is robust and does not require extensive preprocessing in terms of baselining or narrowing regions. AutoStruct expects user samples to be of somewhat high resolution with points along the spectrum at intervals of over 1 cm^-1. Additionally, AutoStruct is primarily interested in the Amide I region of the spectrum, which must include 1599-1711 cm^-1.</p>
+        <p class="pb-1">AutoStruct accepts comma-separated value (CSV) tabular data as input. Columns should be unlabeled. In the left column, wavenumbers (cm^-1) should be listed. In the right column, corresponding relative intensities should be listed. An image for an example file is provided below.</p>
+        <img src="{{ url_for('static', filename='images/csv_preparation.png') }}" alt="Prepared CSV Example" class="img-fluid pb-3", style="max-width: 700px;">
+
+        <h4 class="pb-2">Expected Results</h3>
+        <p class="pb-1">AutoStruct will generally take between 5-20 seconds to process samples once they are uploaded to the server. Content is broken into three sections. The first section numerically characterizes the secondary structure relative contribution. These are provided as a complete breakdown and a summarized example which may be more intuitive for a user’s need. The next section provides the user with a Gaussian Member Plot. This plot shows the constituent gaussian curves of the Amide I band as well as their secondary structure assignment. Finally, a whole plot of the spectrum is provided so users can verify their upload.</p>
+        <img src="{{ url_for('static', filename='images/tutorial_results.png') }}" alt="Example of Results" class="img-fluid pb-3", style="max-width: 700px;">
+
+        <h4 class="pb-2">How to Download Results</h3>
+        <p class="pb-3">At each of the aforementioned sections, results are able to be individually downloaded. Alternatively, near the submit button, users are given the option to download all the results at once. The relative secondary structure contributions are downloaded as CSV files, the graphs are PNG image files.</p>
+
+        <h4 class="pb-2">Caveats and Other Information</h3>
+        <p>AutoStruct accepts user files. In order to stop the build-up of files in storage, the backend storage system will be cleared between 00:00-00:30 EST every day. During this period, please be aware that a user’s sample could be lost which may impact your ability to download corresponding files. Outside of this period, refreshing the screen will make files inaccessible to the user.</p>
+        <p class="pb-3">AutoStruct uses the assumption of a Gaussian lineshape for spectral deconvolution. Other Protein Secondary Structure FSD workflows are often implemented with the assumption of a Lorentzian lineshape. We have not noticed a large impact on results, but to learn more, we recommend reading [INSERT PAPER].</p>
+    </div>
+{% endblock%}

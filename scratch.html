@@ -1,0 +1,72 @@
+<!--This will be deleted-->
+<!--It is very hard to use emmet with FLask (prob impossible)-->
+<!--This doc is for quick assembly of html stacks-->
+
+<!--Spacing element-->
+<section class="bg-white p-5"></section>
+
+<!--Making a footer-->
+<!--on one side lets have the logo and the other do relevant links-->
+<section class="bg-dark text-light p-5 mt-5 fixed-bottom">
+    <footer class="container text-center">
+        <div class="d-md-flex align-items-center justify-content-evenly">
+            <div class="me-4">
+                <!--Logos-->
+                <div class="d-md-flex justify-content-center">
+                    <img src="{{ url_for('static', filename='images/lab_logo.webp') }}" alt="Bioinspired Lab Logo" class="img-fluid", style="max-width: 200px;">
+                    <img src="{{ url_for('static', filename='images/CoE_vert_logo_white.svg') }}" alt="College of Engineering Logo" class="img-fluid", style="max-width: 200px;">
+                </div>
+            </div>
+            <div class="ms-4">
+                <!--Links-->
+                <h3 class="mb-3 text-white">
+                    <u>Links</u>
+                </h3>
+                <h6>
+                    <a class="mb-2 text-light text-decoration-none" href="https://www.apenafrancesch.com/" target="_blank">Bioinspired Laboratory Website</a>
+                </h6>
+                <h6>
+                    <a class="mb-2 text-light text-decoration-none" href="https://en.wikipedia.org/wiki/Bundt_cake" target="_blank">AutoStruct Publication</a>
+                </h6>
+            </div>
+        </div>
+    </footer>
+</section>
+
+<!--Make custom spot for each page's content-->
+<section class="bg-whtie text-dark p-5 text-center">
+    <div class="container">
+        {% block content%}
+        {% endblock %}
+    </div>
+</section>
+
+<!--MAKING THE TOOL-->
+<section class="bg-white text-dark p-5 text-center">
+    <h1 class="mb-2">AutoStruct</h1>
+    <p class="lead mb-1">
+        Please submit a CSV of a protein FTIR. Please ensure the Amide I (1700-1600 cm^-1) region is included.
+    </p>
+</section>
+
+<!--FORM ON HOME PAGE-->
+<form class='form-group' action="/upload" method="POST" enctype="multipart/form-data">
+    <label for="file">File:</label>
+    <input type="file" id="file" name="file"><br>
+    <button>Upload</button>
+</form>
+
+<!--Tutorial Page-->
+<div>
+    <h1 class="pb-3">Tutorial</h1>
+
+    <h3 class="pb-4">What Type of Samples to Submit</h3>
+
+    <h3 class="pb-4">How to Prepare Files and Preprocessing</h3>
+
+    <h3 class="pb-4">Expected Results</h3>
+
+    <h3 class="pb-4">How to Download Results</h3>
+
+    <h3 class="pb-4">Caveats and Other Information</h3>
+</div>
